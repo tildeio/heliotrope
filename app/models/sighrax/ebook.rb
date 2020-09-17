@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sighrax
-  class ElectronicPublication < Ebook
+  class Ebook < Asset
     private_class_method :new
 
     private

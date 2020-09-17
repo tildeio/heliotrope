@@ -166,10 +166,7 @@ class EPubsController < CheckpointController
   end
 
   def share_link
-    return head :no_content unless @policy.show?
-
-    subdomain = @presenter.parent.subdomain
-    if Press.where(subdomain: subdomain).first&.allow_share_links?
+    if ShareEbookPolicy.new(current_actor, @entity.parent, ebook_policy: @policy).allowed?
       expire = Time.now.to_i + 28 * 24 * 3600 # 28 days in seconds
       token = JsonWebToken.encode(data: @noid, exp: expire)
       ShareLinkLog.create(ip_address: request.ip,
