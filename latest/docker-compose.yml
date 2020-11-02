@@ -1,0 +1,52 @@
+version: '3'
+services:
+  # See https://github.com/fcrepo-exts/fcrepo-docker/tree/v5.1.0 for configuration
+  fcrepo:
+    image: gkostin1966/fcrepo:5.1.0
+    ports:
+      - "8984:8080"
+    volumes:
+      - fcrepo:/opt/fcrepo/data
+  solr:
+    image: solr
+    ports:
+      - "8983:8993"
+    volumes:
+      - solr:/var/solr
+    command:
+      - solr-precreate
+      - gettingstarted
+  mysql:
+    image: mysql
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "8080:8080"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  web:
+    build: .
+    command: tail -f /dev/null
+    volumes:
+      - ..:/heliotrope
+      - node_modules:/heliotrope/node_modules
+    ports:
+      - "3000:3000"
+      # Rubymine Ports required for debugging
+      - "1234:1234"
+      - "26166:26168"
+    depends_on:
+      - fcrepo
+      - solr
+      - mysql
+      - redis
+volumes:
+  fcrepo:
+  solr:
+  mysql:
+  node_modules:
