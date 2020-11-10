@@ -1,3 +1,28 @@
+<% content_for :head do %>
+  <%# https://github.com/mlibrary/heliotrope/issues/1084 %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <%= stylesheet_pack_tag 'ableplayer_embed/build/ableplayer_embed', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_pack_tag 'ableplayer_embed/build/ableplayer_embed', 'data-turbolinks-track': 'reload' %>
+
+  <script>
+    $(document).ready(function() {
+      setupVideoAnalytics();
+    });
+
+    function setupVideoAnalytics() {
+      if (typeof(ga) == typeof(Function)) {
+        var video = $('#video').get(0)
+        video.addEventListener("play", function() {
+          press_tracker_event('e_reader', 'play_video', window.location.href);
+        });
+        video.addEventListener("pause", function() {
+          press_tracker_event('e_reader', 'stop_video', window.location.href);
+        });
+      }
+    }
+  </script>
+<% end %>
+
 <video id="video"
        preload="metadata"
        data-able-player
@@ -16,21 +41,3 @@
   <% end %>
   Your browser does not support the video tag.
 </video>
-
-<script>
-    $(document).ready(function() {
-      setupVideoAnalytics();
-    });
-
-    function setupVideoAnalytics() {
-      if (typeof(ga) == typeof(Function)) {
-        var video = $('#video').get(0)
-        video.addEventListener("play", function() {
-          press_tracker_event('e_reader', 'play_video', window.location.href);
-        });
-        video.addEventListener("pause", function() {
-          press_tracker_event('e_reader', 'stop_video', window.location.href);
-        });
-      }
-    }
-</script>
