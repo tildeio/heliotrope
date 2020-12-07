@@ -60,3 +60,8 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+# puma monitoring, see HELIO-3388
+# testing/staging/preview/production would need this change in the deploy project
+activate_control_app
+plugin :yabeda
